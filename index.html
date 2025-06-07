@@ -1,0 +1,1590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DBMS Complete Guide - SQL & MongoDB for Placements</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .content {
+            padding: 30px;
+        }
+        .concept {
+            margin-bottom: 40px;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+        .concept:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .concept-header {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        .concept-content {
+            padding: 25px;
+        }
+        .diagram {
+            background: #f8f9fa;
+            border: 2px dashed #4ECDC4;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            font-family: monospace;
+        }
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            border-left: 4px solid #4ECDC4;
+            white-space: pre;
+            line-height: 1.5;
+        }
+        .sql-block {
+            background: #1a365d;
+            color: #63b3ed;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            border-left: 4px solid #63b3ed;
+            white-space: pre;
+            line-height: 1.5;
+        }
+        .mongodb-block {
+            background: #1a202c;
+            color: #68d391;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            border-left: 4px solid #68d391;
+            white-space: pre;
+            line-height: 1.5;
+        }
+        .highlight {
+            background: linear-gradient(120deg, #a8edea 0%, #fed6e3 100%);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #FF6B6B;
+        }
+        .example {
+            background: #f0f8ff;
+            border: 1px solid #b3d9ff;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        .visual-diagram {
+            background: white;
+            border: 2px solid #4ECDC4;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        .comparison-table th, .comparison-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        .comparison-table th {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            text-align: center;
+        }
+        .sql-bg { background: #e6f3ff; }
+        .mongo-bg { background: #e6ffe6; }
+        .tabs {
+            display: flex;
+            margin: 20px 0;
+        }
+        .tab {
+            background: #f1f1f1;
+            border: none;
+            padding: 15px 25px;
+            cursor: pointer;
+            border-radius: 10px 10px 0 0;
+            margin-right: 5px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .tab.active {
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            color: white;
+        }
+        .tab-content {
+            display: none;
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 0 10px 10px 10px;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .er-diagram {
+            background: #fff;
+            border: 2px solid #4ECDC4;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: monospace;
+            text-align: center;
+        }
+        .entity-box {
+            background: #FFE5B4;
+            border: 2px solid #FF6B6B;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 5px;
+            display: inline-block;
+            min-width: 120px;
+        }
+        .relationship-line {
+            color: #4ECDC4;
+            font-weight: bold;
+        }
+    </style>
+    
+    <script>
+        // Define functions before they are used
+        
+        // Normalization tabs (1NF, 2NF, 3NF, BCNF)
+        function showNormalizationTab(tabId) {
+            // Hide all normalization tabs
+            var tabs = ['1nf', '2nf', '3nf', 'bcnf'];
+            tabs.forEach(function(id) {
+                var element = document.getElementById(id);
+                if (element) {
+                    element.style.display = 'none';
+                }
+            });
+            
+            // Show selected tab
+            var selectedTab = document.getElementById(tabId);
+            if (selectedTab) {
+                selectedTab.style.display = 'block';
+            }
+            
+            // Update button styles
+            var buttons = document.querySelectorAll('.tabs button[onclick*="showNormalizationTab"]');
+            buttons.forEach(function(btn) {
+                btn.classList.remove('active');
+            });
+            
+            // Add active class to the clicked button
+            var clickedButtons = document.querySelectorAll('.tabs button[onclick="showNormalizationTab(\'' + tabId + '\')"]');
+            clickedButtons.forEach(function(btn) {
+                btn.classList.add('active');
+            });
+        }
+        
+        // Advanced topics tabs
+        function showAdvancedTab(tabId) {
+            // Hide all advanced tabs
+            var tabs = ['replication', 'sharding', 'cap', 'nosql'];
+            tabs.forEach(function(id) {
+                var element = document.getElementById(id);
+                if (element) {
+                    element.style.display = 'none';
+                }
+            });
+            
+            // Show selected tab
+            var selectedTab = document.getElementById(tabId);
+            if (selectedTab) {
+                selectedTab.style.display = 'block';
+            }
+            
+            // Update button styles
+            var buttons = document.querySelectorAll('.tabs button[onclick*="showAdvancedTab"]');
+            buttons.forEach(function(btn) {
+                btn.classList.remove('active');
+            });
+            
+            // Add active class to the clicked button
+            var clickedButtons = document.querySelectorAll('.tabs button[onclick="showAdvancedTab(\'' + tabId + '\')"]');
+            clickedButtons.forEach(function(btn) {
+                btn.classList.add('active');
+            });
+        }
+        
+        // Cheat sheet tabs
+        function showCheatTab(tabId) {
+            // Hide all cheat tabs
+            var tabs = ['sql-cheat', 'mongo-cheat'];
+            tabs.forEach(function(id) {
+                var element = document.getElementById(id);
+                if (element) {
+                    element.style.display = 'none';
+                }
+            });
+            
+            // Show selected tab
+            var selectedTab = document.getElementById(tabId);
+            if (selectedTab) {
+                selectedTab.style.display = 'block';
+            }
+            
+            // Update button styles
+            var buttons = document.querySelectorAll('.tabs button[onclick*="showCheatTab"]');
+            buttons.forEach(function(btn) {
+                btn.classList.remove('active');
+            });
+            
+            // Add active class to the clicked button
+            var clickedButtons = document.querySelectorAll('.tabs button[onclick="showCheatTab(\'' + tabId + '\')"]');
+            clickedButtons.forEach(function(btn) {
+                btn.classList.add('active');
+            });
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🗄️ Database Management Systems</h1>
+            <p>Complete Guide for Placement Interviews - SQL & MongoDB</p>
+        </div>
+        
+        <div class="content">
+            <!-- Introduction -->
+            <div class="concept">
+                <div class="concept-header">📖 What is DBMS?</div>
+                <div class="concept-content">
+                    <p><strong>Database Management System (DBMS)</strong> is software that provides an interface to interact with databases. It manages data storage, retrieval, and organization efficiently.</p>
+                    
+                    <div class="visual-diagram">
+                        <h3>🏗️ Real World vs Database Analogy</h3>
+                        <div style="display: flex; justify-content: space-around; flex-wrap: wrap; gap: 20px;">
+                            <div style="background: #FFE5B4; padding: 15px; border-radius: 10px; min-width: 200px;">
+                                <strong>🏢 Real World</strong><br>
+                                Library → Books on Shelves<br>
+                                Hospital → Patient Records<br>
+                                Bank → Account Information<br>
+                                School → Student Records
+                            </div>
+                            <div style="background: #E5F3FF; padding: 15px; border-radius: 10px; min-width: 200px;">
+                                <strong>💾 Database World</strong><br>
+                                Tables → Organized Data<br>
+                                Rows → Individual Records<br>
+                                Columns → Data Fields<br>
+                                Queries → Search Operations
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="highlight">
+                        <strong>🎯 Why DBMS for Placements?</strong><br>
+                        • 90% of companies ask DBMS questions<br>
+                        • Essential for backend development<br>
+                        • Foundation for data-driven applications<br>
+                        • Critical for system design interviews
+                    </div>
+                </div>
+            </div>
+
+            <!-- Types of Databases -->
+            <div class="concept">
+                <div class="concept-header">🏛️ Types of Databases</div>
+                <div class="concept-content">
+                    <div class="visual-diagram">
+                        <h3>Database Classifications</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin: 20px 0;">
+                            <div style="background: #FFE5E5; padding: 20px; border-radius: 10px; text-align: center;">
+                                <strong>📊 RELATIONAL (SQL)</strong><br>
+                                <em>Structured Data</em><br>
+                                MySQL, PostgreSQL, Oracle<br>
+                                ACID Properties<br>
+                                Fixed Schema
+                            </div>
+                            <div style="background: #E5F3FF; padding: 20px; border-radius: 10px; text-align: center;">
+                                <strong>📄 DOCUMENT</strong><br>
+                                <em>JSON-like</em><br>
+                                MongoDB, CouchDB<br>
+                                Flexible Schema<br>
+                                Nested Documents
+                            </div>
+                            <div style="background: #F0FFF0; padding: 20px; border-radius: 10px; text-align: center;">
+                                <strong>🔑 KEY-VALUE</strong><br>
+                                <em>Simple Pairs</em><br>
+                                Redis, DynamoDB<br>
+                                Fast Access<br>
+                                Caching
+                            </div>
+                            <div style="background: #FFF8DC; padding: 20px; border-radius: 10px; text-align: center;">
+                                <strong>🕸️ GRAPH</strong><br>
+                                <em>Relationships</em><br>
+                                Neo4j, Amazon Neptune<br>
+                                Connected Data<br>
+                                Social Networks
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="example">
+                        <h4>🔍 When to Use Which Database?</h4>
+                        <table class="comparison-table">
+                            <tr>
+                                <th>Use Case</th>
+                                <th>Database Type</th>
+                                <th>Example</th>
+                                <th>Why?</th>
+                            </tr>
+                            <tr class="sql-bg">
+                                <td>Banking System</td>
+                                <td>Relational (SQL)</td>
+                                <td>PostgreSQL</td>
+                                <td>ACID compliance, transactions</td>
+                            </tr>
+                            <tr class="mongo-bg">
+                                <td>Content Management</td>
+                                <td>Document</td>
+                                <td>MongoDB</td>
+                                <td>Flexible schema, JSON data</td>
+                            </tr>
+                            <tr class="sql-bg">
+                                <td>E-commerce</td>
+                                <td>Relational + Cache</td>
+                                <td>MySQL + Redis</td>
+                                <td>Structured data + fast access</td>
+                            </tr>
+                            <tr class="mongo-bg">
+                                <td>Social Media</td>
+                                <td>Document + Graph</td>
+                                <td>MongoDB + Neo4j</td>
+                                <td>User profiles + relationships</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SQL Fundamentals -->
+            <div class="concept">
+                <div class="concept-header">🗃️ SQL (Structured Query Language)</div>
+                <div class="concept-content">
+                    <div class="highlight">
+                        <strong>📋 What is SQL?</strong><br>
+                        SQL is a standard language for managing and manipulating relational databases. It's used to create, read, update, and delete data.
+                    </div>
+
+                    <div class="visual-diagram">
+                        <h3>📊 SQL Command Categories</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                            <div style="background: #FFE5E5; padding: 15px; border-radius: 8px;">
+                                <strong>📝 DDL</strong><br>
+                                <em>Data Definition</em><br>
+                                CREATE, ALTER, DROP
+                            </div>
+                            <div style="background: #E5F3FF; padding: 15px; border-radius: 8px;">
+                                <strong>📊 DML</strong><br>
+                                <em>Data Manipulation</em><br>
+                                INSERT, UPDATE, DELETE
+                            </div>
+                            <div style="background: #F0FFF0; padding: 15px; border-radius: 8px;">
+                                <strong>🔍 DQL</strong><br>
+                                <em>Data Query</em><br>
+                                SELECT
+                            </div>
+                            <div style="background: #FFF8DC; padding: 15px; border-radius: 8px;">
+                                <strong>🔐 DCL</strong><br>
+                                <em>Data Control</em><br>
+                                GRANT, REVOKE
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="example">
+                        <h4>🏗️ Creating Tables (DDL)</h4>
+                        <div class="sql-block">-- Creating a Students table
+CREATE TABLE students (
+    student_id INT PRIMARY KEY AUTO_INCREMENT,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    age INT CHECK (age >= 18),
+    enrollment_date DATE DEFAULT CURRENT_DATE,
+    gpa DECIMAL(3,2),
+    major VARCHAR(50)
+);
+
+-- Creating a Courses table
+CREATE TABLE courses (
+    course_id INT PRIMARY KEY AUTO_INCREMENT,
+    course_name VARCHAR(100) NOT NULL,
+    course_code VARCHAR(10) UNIQUE,
+    credits INT DEFAULT 3,
+    instructor VARCHAR(50),
+    department VARCHAR(50)
+);
+
+-- Creating a junction table for many-to-many relationship
+CREATE TABLE student_courses (
+    enrollment_id INT PRIMARY KEY AUTO_INCREMENT,
+    student_id INT,
+    course_id INT,
+    enrollment_date DATE DEFAULT CURRENT_DATE,
+    grade CHAR(2),
+    FOREIGN KEY (student_id) REFERENCES students(student_id),
+    FOREIGN KEY (course_id) REFERENCES courses(course_id)
+);</div>
+                    </div>
+
+                    <div class="example">
+                        <h4>📝 Inserting Data (DML)</h4>
+                        <div class="sql-block">-- Inserting single records
+INSERT INTO students (first_name, last_name, email, age, gpa, major) 
+VALUES ('John', 'Doe', 'john.doe@email.com', 20, 3.75, 'Computer Science');
+
+INSERT INTO students (first_name, last_name, email, age, gpa, major) 
+VALUES ('Jane', 'Smith', 'jane.smith@email.com', 21, 3.90, 'Mathematics');
+
+-- Inserting multiple records
+INSERT INTO courses (course_name, course_code, credits, instructor, department) 
+VALUES 
+    ('Database Systems', 'CS301', 4, 'Dr. Wilson', 'Computer Science'),
+    ('Data Structures', 'CS201', 3, 'Prof. Johnson', 'Computer Science'),
+    ('Calculus I', 'MATH101', 4, 'Dr. Brown', 'Mathematics'),
+    ('Statistics', 'MATH201', 3, 'Prof. Davis', 'Mathematics');
+
+-- Enrolling students in courses
+INSERT INTO student_courses (student_id, course_id, grade) 
+VALUES 
+    (1, 1, 'A-'),
+    (1, 2, 'B+'),
+    (2, 1, 'A'),
+    (2, 3, 'A+');</div>
+                    </div>
+
+                    <div class="example">
+                        <h4>🔍 Querying Data (DQL)</h4>
+                        <div class="sql-block">-- Basic SELECT queries
+SELECT * FROM students;
+
+SELECT first_name, last_name, gpa 
+FROM students 
+WHERE gpa > 3.5;
+
+SELECT * FROM students 
+WHERE major = 'Computer Science' 
+ORDER BY gpa DESC;
+
+-- Aggregate functions
+SELECT COUNT(*) as total_students FROM students;
+
+SELECT major, AVG(gpa) as average_gpa 
+FROM students 
+GROUP BY major;
+
+SELECT major, COUNT(*) as student_count 
+FROM students 
+GROUP BY major 
+HAVING COUNT(*) > 1;
+
+-- JOINS - Most Important for Interviews!
+-- Inner Join: Students with their enrolled courses
+SELECT s.first_name, s.last_name, c.course_name, sc.grade
+FROM students s
+INNER JOIN student_courses sc ON s.student_id = sc.student_id
+INNER JOIN courses c ON sc.course_id = c.course_id;
+
+-- Left Join: All students (even those not enrolled)
+SELECT s.first_name, s.last_name, c.course_name
+FROM students s
+LEFT JOIN student_courses sc ON s.student_id = sc.student_id
+LEFT JOIN courses c ON sc.course_id = c.course_id;
+
+-- Complex query with subquery
+SELECT first_name, last_name, gpa
+FROM students
+WHERE gpa > (SELECT AVG(gpa) FROM students);
+
+-- Window functions (Advanced)
+SELECT first_name, last_name, gpa,
+       RANK() OVER (ORDER BY gpa DESC) as gpa_rank,
+       ROW_NUMBER() OVER (PARTITION BY major ORDER BY gpa DESC) as major_rank
+FROM students;</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MongoDB Fundamentals -->
+            <div class="concept">
+                <div class="concept-header">🍃 MongoDB (NoSQL Document Database)</div>
+                <div class="concept-content">
+                    <div class="highlight">
+                        <strong>🌱 What is MongoDB?</strong><br>
+                        MongoDB is a NoSQL document database that stores data in flexible, JSON-like documents called BSON (Binary JSON).
+                    </div>
+
+                    <div class="visual-diagram">
+                        <h3>🏗️ MongoDB vs SQL Structure</h3>
+                        <table class="comparison-table">
+                            <tr>
+                                <th>SQL Concept</th>
+                                <th>MongoDB Equivalent</th>
+                                <th>Description</th>
+                            </tr>
+                            <tr>
+                                <td>Database</td>
+                                <td>Database</td>
+                                <td>Container for collections</td>
+                            </tr>
+                            <tr>
+                                <td>Table</td>
+                                <td>Collection</td>
+                                <td>Group of documents</td>
+                            </tr>
+                            <tr>
+                                <td>Row</td>
+                                <td>Document</td>
+                                <td>Individual record</td>
+                            </tr>
+                            <tr>
+                                <td>Column</td>
+                                <td>Field</td>
+                                <td>Data attribute</td>
+                            </tr>
+                            <tr>
+                                <td>Primary Key</td>
+                                <td>_id</td>
+                                <td>Unique identifier</td>
+                            </tr>
+                            <tr>
+                                <td>JOIN</td>
+                                <td>$lookup</td>
+                                <td>Combine data from collections</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="example">
+                        <h4>📄 Document Structure in MongoDB</h4>
+                        <div class="mongodb-block">// Sample student document
+{
+    "_id": ObjectId("64f8a1b2c3d4e5f6a7b8c9d0"),
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "john.doe@email.com",
+    "age": 20,
+    "major": "Computer Science",
+    "gpa": 3.75,
+    "enrollmentDate": ISODate("2023-01-15"),
+    "address": {
+        "street": "123 College Ave",
+        "city": "Boston",
+        "state": "MA",
+        "zipCode": "02101"
+    },
+    "courses": [
+        {
+            "courseId": ObjectId("64f8a1b2c3d4e5f6a7b8c9d1"),
+            "courseName": "Database Systems",
+            "courseCode": "CS301",
+            "grade": "A-",
+            "semester": "Fall 2023"
+        },
+        {
+            "courseId": ObjectId("64f8a1b2c3d4e5f6a7b8c9d2"),
+            "courseName": "Data Structures",
+            "courseCode": "CS201",
+            "grade": "B+",
+            "semester": "Fall 2023"
+        }
+    ],
+    "skills": ["Java", "Python", "SQL", "MongoDB"],
+    "isActive": true
+}</div>
+                    </div>
+
+                    <div class="example">
+                        <h4>🔧 Basic MongoDB Operations</h4>
+                        <div class="mongodb-block">// Create/Switch to database
+use university
+
+// Insert single document
+db.students.insertOne({
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "john.doe@email.com",
+    "age": 20,
+    "major": "Computer Science",
+    "gpa": 3.75,
+    "skills": ["Java", "Python", "SQL"]
+})
+
+// Insert multiple documents
+db.students.insertMany([
+    {
+        "firstName": "Jane",
+        "lastName": "Smith",
+        "email": "jane.smith@email.com",
+        "age": 21,
+        "major": "Mathematics",
+        "gpa": 3.90,
+        "skills": ["Python", "R", "Statistics"]
+    },
+    {
+        "firstName": "Bob",
+        "lastName": "Johnson",
+        "email": "bob.johnson@email.com",
+        "age": 22,
+        "major": "Physics",
+        "gpa": 3.60,
+        "skills": ["MATLAB", "Python", "LaTeX"]
+    }
+])
+
+// Find all documents
+db.students.find()
+
+// Find with conditions
+db.students.find({"major": "Computer Science"})
+
+// Find with comparison operators
+db.students.find({"age": {"$gte": 21}})
+
+// Find with multiple conditions
+db.students.find({
+    "major": "Computer Science",
+    "gpa": {"$gt": 3.5}
+})
+
+// Find specific fields (projection)
+db.students.find(
+    {"major": "Computer Science"},
+    {"firstName": 1, "lastName": 1, "gpa": 1, "_id": 0}
+)</div>
+                    </div>
+
+                    <div class="example">
+                        <h4>📊 Advanced MongoDB Queries</h4>
+                        <div class="mongodb-block">// Update operations
+db.students.updateOne(
+    {"email": "john.doe@email.com"},
+    {"$set": {"gpa": 3.80, "year": "Sophomore"}}
+)
+
+db.students.updateMany(
+    {"major": "Computer Science"},
+    {"$push": {"skills": "JavaScript"}}
+)
+
+// Delete operations
+db.students.deleteOne({"email": "john.doe@email.com"})
+
+db.students.deleteMany({"gpa": {"$lt": 3.0}})
+
+// Aggregation Pipeline - Very Important for Interviews!
+db.students.aggregate([
+    // Stage 1: Match students with GPA > 3.5
+    {
+        "$match": {
+            "gpa": {"$gt": 3.5}
+        }
+    },
+    // Stage 2: Group by major and calculate average GPA
+    {
+        "$group": {
+            "_id": "$major",
+            "averageGPA": {"$avg": "$gpa"},
+            "studentCount": {"$sum": 1},
+            "topStudent": {"$max": "$gpa"}
+        }
+    },
+    // Stage 3: Sort by average GPA descending
+    {
+        "$sort": {
+            "averageGPA": -1
+        }
+    }
+])
+
+// Complex aggregation with lookup (like JOIN)
+db.students.aggregate([
+    {
+        "$lookup": {
+            "from": "courses",
+            "localField": "courses.courseId",
+            "foreignField": "_id",
+            "as": "courseDetails"
+        }
+    },
+    {
+        "$project": {
+            "firstName": 1,
+            "lastName": 1,
+            "major": 1,
+            "courseCount": {"$size": "$courses"},
+            "courseNames": "$courseDetails.courseName"
+        }
+    }
+])
+
+// Text search
+db.students.createIndex({"firstName": "text", "lastName": "text"})
+db.students.find({"$text": {"$search": "John"}})
+
+// Geospatial queries (if you have location data)
+db.students.find({
+    "location": {
+        "$near": {
+            "$geometry": {"type": "Point", "coordinates": [-71.0589, 42.3601]},
+            "$maxDistance": 1000
+        }
+    }
+})</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Database Design -->
+            <div class="concept">
+                <div class="concept-header">🎨 Database Design & Normalization</div>
+                <div class="concept-content">
+                    <div class="highlight">
+                        <strong>🎯 Database Design Principles</strong><br>
+                        Good database design ensures data integrity, reduces redundancy, and improves performance through proper normalization.
+                    </div>
+
+                    <div class="er-diagram">
+                        <h3>📈 Entity-Relationship (ER) Diagram Example</h3>
+                        <div style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 20px;">
+                            <div class="entity-box">
+                                <strong>STUDENT</strong><br>
+                                student_id (PK)<br>
+                                first_name<br>
+                                last_name<br>
+                                email
+                            </div>
+                            <div class="relationship-line">
+                                ── enrolls_in ──
+                            </div>
+                            <div class="entity-box">
+                                <strong>COURSE</strong><br>
+                                course_id (PK)<br>
+                                course_name<br>
+                                course_code<br>
+                                credits
+                            </div>
+                        </div>
+                        <p style="margin-top: 20px;"><em>Many-to-Many Relationship: A student can enroll in multiple courses, and a course can have multiple students</em></p>
+                    </div>
+
+                    <div class="example">
+                        <h4>📏 Normalization Forms</h4>
+                        
+                        <div class="tabs">
+                            <button class="tab active" onclick="showNormalizationTab('1nf')">1NF</button>
+                            <button class="tab" onclick="showNormalizationTab('2nf')">2NF</button>
+                            <button class="tab" onclick="showNormalizationTab('3nf')">3NF</button>
+                            <button class="tab" onclick="showNormalizationTab('bcnf')">BCNF</button>
+                        </div>
+
+                        <div id="1nf" class="tab-content active">
+                            <h4>First Normal Form (1NF)</h4>
+                            <p><strong>Rule:</strong> Each column should contain atomic (indivisible) values, and each column should contain values of a single type.</p>
+                            
+                            <p><strong>❌ Violating 1NF:</strong></p>
+                            <div class="sql-block">-- BAD: Multiple values in a single column
+CREATE TABLE students_bad (
+    student_id INT,
+    name VARCHAR(100),
+    subjects VARCHAR(200)  -- "Math, Physics, Chemistry" - violates 1NF
+);</div>
+                            
+                            <p><strong>✅ Following 1NF:</strong></p>
+                            <div class="sql-block">-- GOOD: Atomic values
+CREATE TABLE students (
+    student_id INT,
+    name VARCHAR(100)
+);
+
+CREATE TABLE student_subjects (
+    student_id INT,
+    subject VARCHAR(50)
+);</div>
+                        </div>
+
+                        <div id="2nf" class="tab-content">
+                            <h4>Second Normal Form (2NF)</h4>
+                            <p><strong>Rule:</strong> Must be in 1NF and all non-key attributes must be fully functionally dependent on the primary key.</p>
+                            
+                            <p><strong>❌ Violating 2NF:</strong></p>
+                            <div class="sql-block">-- BAD: Partial dependency
+CREATE TABLE student_courses_bad (
+    student_id INT,
+    course_id INT,
+    student_name VARCHAR(100),  -- Depends only on student_id
+    course_name VARCHAR(100),   -- Depends only on course_id
+    grade CHAR(2),
+    PRIMARY KEY (student_id, course_id)
+);</div>
+                            
+                            <p><strong>✅ Following 2NF:</strong></p>
+                            <div class="sql-block">-- GOOD: Separate tables
+CREATE TABLE students (
+    student_id INT PRIMARY KEY,
+    student_name VARCHAR(100)
+);
+
+CREATE TABLE courses (
+    course_id INT PRIMARY KEY,
+    course_name VARCHAR(100)
+);
+
+CREATE TABLE enrollments (
+    student_id INT,
+    course_id INT,
+    grade CHAR(2),
+    PRIMARY KEY (student_id, course_id)
+);</div>
+                        </div>
+
+                        <div id="3nf" class="tab-content">
+                            <h4>Third Normal Form (3NF)</h4>
+                            <p><strong>Rule:</strong> Must be in 2NF and have no transitive dependencies (non-key attributes should not depend on other non-key attributes).</p>
+                            
+                            <p><strong>❌ Violating 3NF:</strong></p>
+                            <div class="sql-block">-- BAD: Transitive dependency
+CREATE TABLE students_bad (
+    student_id INT PRIMARY KEY,
+    name VARCHAR(100),
+    department_id INT,
+    department_name VARCHAR(100),  -- Depends on department_id, not student_id
+    department_head VARCHAR(100)   -- Depends on department_id, not student_id
+);</div>
+                            
+                            <p><strong>✅ Following 3NF:</strong></p>
+                            <div class="sql-block">-- GOOD: Remove transitive dependencies
+CREATE TABLE departments (
+    department_id INT PRIMARY KEY,
+    department_name VARCHAR(100),
+    department_head VARCHAR(100)
+);
+
+CREATE TABLE students (
+    student_id INT PRIMARY KEY,
+    name VARCHAR(100),
+    department_id INT,
+    FOREIGN KEY (department_id) REFERENCES departments(department_id)
+);</div>
+                        </div>
+
+                        <div id="bcnf" class="tab-content">
+                            <h4>Boyce-Codd Normal Form (BCNF)</h4>
+                            <p><strong>Rule:</strong> Must be in 3NF and for every functional dependency X → Y, X must be a superkey.</p>
+                            
+                            <p><strong>❌ Violating BCNF:</strong></p>
+                            <div class="sql-block">-- BAD: Non-superkey determines another attribute
+CREATE TABLE course_instructor_bad (
+    course_id INT,
+    instructor_id INT,
+    instructor_office VARCHAR(50),  -- instructor_id → instructor_office
+    PRIMARY KEY (course_id, instructor_id)
+    -- Problem: instructor_id is not a superkey but determines instructor_office
+);</div>
+                            
+                            <p><strong>✅ Following BCNF:</strong></p>
+                            <div class="sql-block">-- GOOD: Separate the dependency
+CREATE TABLE instructors (
+    instructor_id INT PRIMARY KEY,
+    instructor_office VARCHAR(50)
+);
+
+CREATE TABLE course_instructor (
+    course_id INT,
+    instructor_id INT,
+    PRIMARY KEY (course_id, instructor_id),
+    FOREIGN KEY (instructor_id) REFERENCES instructors(instructor_id)
+);</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ACID Properties -->
+            <div class="concept">
+                <div class="concept-header">🔐 ACID Properties & Transactions</div>
+                <div class="concept-content">
+                    <div class="highlight">
+                        <strong>🛡️ ACID Properties</strong><br>
+                        ACID ensures database transactions are processed reliably and maintain data integrity.
+                    </div>
+
+                    <div class="visual-diagram">
+                        <h3>🔍 ACID Explained</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                            <div style="background: #FFE5E5; padding: 20px; border-radius: 10px;">
+                                <strong>⚛️ ATOMICITY</strong><br>
+                                <em>"All or Nothing"</em><br>
+                                Either all operations succeed or all fail<br>
+                                <small>Example: Money transfer - debit and credit both happen or neither</small>
+                            </div>
+                            <div style="background: #E5F3FF; padding: 20px; border-radius: 10px;">
+                                <strong>🔒 CONSISTENCY</strong><br>
+                                <em>"Valid State"</em><br>
+                                Database remains in valid state before/after transaction<br>
+                                <small>Example: Account balance can't be negative</small>
+                            </div>
+                            <div style="background: #F0FFF0; padding: 20px; border-radius: 10px;">
+                                <strong>🏝️ ISOLATION</strong><br>
+                                <em>"Concurrent Safety"</em><br>
+                                Transactions don't interfere with each other<br>
+                                <small>Example: Two people can't book the same seat simultaneously</small>
+                            </div>
+                            <div style="background: #FFF8DC; padding: 20px; border-radius: 10px;">
+                                <strong>💾 DURABILITY</strong><br>
+                                <em>"Permanent Storage"</em><br>
+                                Committed changes persist even after system failure<br>
+                                <small>Example: Confirmed payment survives server crash</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="example">
+                        <h4>💳 Banking Transaction Example</h4>
+                        <div class="sql-block">-- Bank transfer transaction demonstrating ACID
+START TRANSACTION;
+
+-- Check if source account has sufficient balance
+SELECT balance FROM accounts WHERE account_id = 1001 FOR UPDATE;
+
+-- If balance >= transfer_amount, proceed
+UPDATE accounts 
+SET balance = balance - 500 
+WHERE account_id = 1001;
+
+UPDATE accounts 
+SET balance = balance + 500 
+WHERE account_id = 1002;
+
+-- Log the transaction
+INSERT INTO transaction_log (from_account, to_account, amount, timestamp)
+VALUES (1001, 1002, 500, NOW());
+
+-- If all operations successful
+COMMIT;
+
+-- If any operation fails
+-- ROLLBACK;</div>
+                    </div>
+
+                    <div class="example">
+                        <h4>🔐 Isolation Levels</h4>
+                        <table class="comparison-table">
+                            <tr>
+                                <th>Isolation Level</th>
+                                <th>Dirty Read</th>
+                                <th>Non-Repeatable Read</th>
+                                <th>Phantom Read</th>
+                                <th>Use Case</th>
+                            </tr>
+                            <tr>
+                                <td><strong>READ UNCOMMITTED</strong></td>
+                                <td>❌ Possible</td>
+                                <td>❌ Possible</td>
+                                <td>❌ Possible</td>
+                                <td>Analytics (fast, approximate)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>READ COMMITTED</strong></td>
+                                <td>✅ Prevented</td>
+                                <td>❌ Possible</td>
+                                <td>❌ Possible</td>
+                                <td>Most web applications</td>
+                            </tr>
+                            <tr>
+                                <td><strong>REPEATABLE READ</strong></td>
+                                <td>✅ Prevented</td>
+                                <td>✅ Prevented</td>
+                                <td>❌ Possible</td>
+                                <td>Financial reports</td>
+                            </tr>
+                            <tr>
+                                <td><strong>SERIALIZABLE</strong></td>
+                                <td>✅ Prevented</td>
+                                <td>✅ Prevented</td>
+                                <td>✅ Prevented</td>
+                                <td>Critical transactions</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Indexing -->
+            <div class="concept">
+                <div class="concept-header">📚 Indexing & Performance</div>
+                <div class="concept-content">
+                    <div class="highlight">
+                        <strong>🚀 What is Indexing?</strong><br>
+                        Indexes are data structures that improve query performance by creating shortcuts to find data quickly, like an index in a book.
+                    </div>
+
+                    <div class="visual-diagram">
+                        <h3>📖 Index Analogy</h3>
+                        <div style="display: flex; justify-content: space-around; flex-wrap: wrap; gap: 20px;">
+                            <div style="background: #FFE5B4; padding: 20px; border-radius: 10px; min-width: 250px;">
+                                <strong>📚 Without Index</strong><br><br>
+                                Finding "Python" in a book:<br>
+                                • Read page 1, 2, 3... 500<br>
+                                • Linear search through all pages<br>
+                                • Time: O(n) - Very slow!<br><br>
+                                <em>Like scanning entire table</em>
+                            </div>
+                            <div style="background: #E5F3FF; padding: 20px; border-radius: 10px; min-width: 250px;">
+                                <strong>📑 With Index</strong><br><br>
+                                Finding "Python" in a book:<br>
+                                • Check index: "Python - Page 287"<br>
+                                • Jump directly to page 287<br>
+                                • Time: O(log n) - Very fast!<br><br>
+                                <em>Like using B-tree index</em>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="example">
+                        <h4>🗂️ Types of Indexes</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 20px 0;">
+                            <div style="background: #F0F8FF; padding: 20px; border-radius: 10px;">
+                                <strong>🔑 PRIMARY INDEX</strong><br>
+                                • Automatically created for primary key<br>
+                                • Unique and clustered<br>
+                                • Data pages physically sorted
+                            </div>
+                            <div style="background: #F0FFF0; padding: 20px; border-radius: 10px;">
+                                <strong>🎯 UNIQUE INDEX</strong><br>
+                                • Ensures uniqueness<br>
+                                • Automatically created for UNIQUE constraints<br>
+                                • Can have multiple per table
+                            </div>
+                            <div style="background: #FFF8DC; padding: 20px; border-radius: 10px;">
+                                <strong>📊 COMPOSITE INDEX</strong><br>
+                                • Multiple columns together<br>
+                                • Order matters: (A, B) ≠ (B, A)<br>
+                                • Useful for multi-column WHERE clauses
+                            </div>
+                            <div style="background: #FFE5E5; padding: 20px; border-radius: 10px;">
+                                <strong>🔍 PARTIAL INDEX</strong><br>
+                                • Index on subset of data<br>
+                                • WHERE condition in index<br>
+                                • Saves space and improves performance
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="example">
+                        <h4>🛠️ Creating Indexes in SQL</h4>
+                        <div class="sql-block">-- Basic index on single column
+CREATE INDEX idx_student_email ON students(email);
+
+-- Composite index on multiple columns
+CREATE INDEX idx_student_major_gpa ON students(major, gpa);
+
+-- Unique index
+CREATE UNIQUE INDEX idx_student_student_id ON students(student_id);
+
+-- Partial index (PostgreSQL)
+CREATE INDEX idx_active_students ON students(last_name) 
+WHERE is_active = true;
+
+-- Covering index (includes additional columns)
+CREATE INDEX idx_student_lookup ON students(student_id) 
+INCLUDE (first_name, last_name, email);
+
+-- Text search index
+CREATE INDEX idx_student_name_search ON students 
+USING gin(to_tsvector('english', first_name || ' ' || last_name));
+
+-- Analyzing index usage
+EXPLAIN (ANALYZE, BUFFERS) 
+SELECT * FROM students WHERE email = 'john.doe@email.com';
+
+-- Show all indexes on a table
+SELECT indexname, indexdef 
+FROM pg_indexes 
+WHERE tablename = 'students';</div>
+                    </div>
+
+                    <div class="example">
+                        <h4>🍃 Indexing in MongoDB</h4>
+                        <div class="mongodb-block">// Create basic index
+db.students.createIndex({"email": 1})  // 1 for ascending, -1 for descending
+
+// Compound index
+db.students.createIndex({"major": 1, "gpa": -1})
+
+// Text index for search
+db.students.createIndex({
+    "firstName": "text",
+    "lastName": "text",
+    "major": "text"
+})
+
+// Geospatial index
+db.students.createIndex({"location": "2dsphere"})
+
+// Sparse index (only indexes documents that have the field)
+db.students.createIndex({"phone": 1}, {"sparse": true})
+
+// Unique index
+db.students.createIndex({"email": 1}, {"unique": true})
+
+// TTL index (Time To Live - auto-delete documents)
+db.sessions.createIndex({"createdAt": 1}, {"expireAfterSeconds": 3600})
+
+// Partial index with condition
+db.students.createIndex(
+    {"gpa": 1}, 
+    {"partialFilterExpression": {"gpa": {"$gt": 3.5}}}
+)
+
+// View all indexes
+db.students.getIndexes()
+
+// Analyze query performance
+db.students.find({"major": "Computer Science"}).explain("executionStats")
+
+// Drop index
+db.students.dropIndex({"email": 1})</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Advanced Topics -->
+            <div class="concept">
+                <div class="concept-header">🚀 Advanced Topics</div>
+                <div class="concept-content">
+                    <div class="tabs">
+                        <button class="tab active" onclick="showAdvancedTab('replication')">Replication</button>
+                        <button class="tab" onclick="showAdvancedTab('sharding')">Sharding</button>
+                        <button class="tab" onclick="showAdvancedTab('cap')">CAP Theorem</button>
+                        <button class="tab" onclick="showAdvancedTab('nosql')">NoSQL Patterns</button>
+                    </div>
+
+                    <div id="replication" class="tab-content active">
+                        <h4>🔄 Database Replication</h4>
+                        <p><strong>Definition:</strong> Storing copies of data across multiple servers for redundancy and performance.</p>
+                        
+                        <div class="visual-diagram">
+                            <h4>Master-Slave Replication</h4>
+                            <div style="display: flex; justify-content: center; align-items: center; gap: 30px; flex-wrap: wrap;">
+                                <div style="background: #FF6B6B; color: white; padding: 20px; border-radius: 10px; text-align: center;">
+                                    <strong>📝 MASTER</strong><br>
+                                    Writes & Reads<br>
+                                    Single source of truth
+                                </div>
+                                <div style="color: #4ECDC4; font-size: 24px;">→</div>
+                                <div style="background: #4ECDC4; color: white; padding: 20px; border-radius: 10px; text-align: center;">
+                                    <strong>📖 SLAVE 1</strong><br>
+                                    Read-only<br>
+                                    Replicates master
+                                </div>
+                                <div style="background: #4ECDC4; color: white; padding: 20px; border-radius: 10px; text-align: center;">
+                                    <strong>📖 SLAVE 2</strong><br>
+                                    Read-only<br>
+                                    Replicates master
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="highlight">
+                            <strong>🎯 Benefits:</strong><br>
+                            • High availability (if master fails, promote slave)<br>
+                            • Read scaling (distribute read load)<br>
+                            • Backup and analytics on slaves<br>
+                            • Geographic distribution
+                        </div>
+
+                        <div class="mongodb-block">// MongoDB Replica Set Setup
+// Initialize replica set
+rs.initiate({
+    _id: "myReplicaSet",
+    members: [
+        {_id: 0, host: "mongodb1.example.net:27017"},
+        {_id: 1, host: "mongodb2.example.net:27017"},
+        {_id: 2, host: "mongodb3.example.net:27017"}
+    ]
+})
+
+// Check replica set status
+rs.status()
+
+// Add new member
+rs.add("mongodb4.example.net:27017")
+
+// Read from secondary (by default, reads go to primary)
+db.students.find().readPref("secondary")</div>
+                    </div>
+
+                    <div id="sharding" class="tab-content">
+                        <h4>🗂️ Database Sharding</h4>
+                        <p><strong>Definition:</strong> Horizontal partitioning of data across multiple servers to handle large datasets and high throughput.</p>
+                        
+                        <div class="visual-diagram">
+                            <h4>Sharding by User ID</h4>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                                <div style="background: #FFE5E5; padding: 15px; border-radius: 8px; text-align: center;">
+                                    <strong>🗄️ SHARD 1</strong><br>
+                                    Users: 1-10000<br>
+                                    Server: db1.example.com
+                                </div>
+                                <div style="background: #E5F3FF; padding: 15px; border-radius: 8px; text-align: center;">
+                                    <strong>🗄️ SHARD 2</strong><br>
+                                    Users: 10001-20000<br>
+                                    Server: db2.example.com
+                                </div>
+                                <div style="background: #F0FFF0; padding: 15px; border-radius: 8px; text-align: center;">
+                                    <strong>🗄️ SHARD 3</strong><br>
+                                    Users: 20001-30000<br>
+                                    Server: db3.example.com
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="example">
+                            <h4>📊 Sharding Strategies</h4>
+                            <table class="comparison-table">
+                                <tr>
+                                    <th>Strategy</th>
+                                    <th>Description</th>
+                                    <th>Pros</th>
+                                    <th>Cons</th>
+                                </tr>
+                                <tr>
+                                    <td><strong>Range-based</strong></td>
+                                    <td>Split by value ranges</td>
+                                    <td>Simple queries</td>
+                                    <td>Uneven distribution</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Hash-based</strong></td>
+                                    <td>Split by hash function</td>
+                                    <td>Even distribution</td>
+                                    <td>No range queries</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Directory-based</strong></td>
+                                    <td>Lookup service for routing</td>
+                                    <td>Flexible</td>
+                                    <td>Single point of failure</td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="mongodb-block">// MongoDB Sharding Setup
+// Enable sharding for database
+sh.enableSharding("university")
+
+// Create shard key index
+db.students.createIndex({"student_id": 1})
+
+// Shard the collection
+sh.shardCollection("university.students", {"student_id": 1})
+
+// Check sharding status
+sh.status()
+
+// View shard distribution
+db.students.getShardDistribution()</div>
+                    </div>
+
+                    <div id="cap" class="tab-content">
+                        <h4>⚖️ CAP Theorem</h4>
+                        <p><strong>CAP Theorem:</strong> In a distributed system, you can only guarantee 2 out of 3 properties: Consistency, Availability, and Partition tolerance.</p>
+                        
+                        <div class="visual-diagram">
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                                <div style="background: #FFE5E5; padding: 20px; border-radius: 10px;">
+                                    <strong>🔒 CONSISTENCY</strong><br>
+                                    All nodes see the same data simultaneously<br><br>
+                                    <em>Example: Banking transactions must be consistent across all servers</em>
+                                </div>
+                                <div style="background: #E5F3FF; padding: 20px; border-radius: 10px;">
+                                    <strong>🌐 AVAILABILITY</strong><br>
+                                    System remains operational<br><br>
+                                    <em>Example: Website should always respond, even if some servers are down</em>
+                                </div>
+                                <div style="background: #F0FFF0; padding: 20px; border-radius: 10px;">
+                                    <strong>🔌 PARTITION TOLERANCE</strong><br>
+                                    System continues despite network failures<br><br>
+                                    <em>Example: System works even when servers can't communicate</em>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="example">
+                            <h4>🎯 CAP Trade-offs in Real Systems</h4>
+                            <table class="comparison-table">
+                                <tr>
+                                    <th>System</th>
+                                    <th>Choice</th>
+                                    <th>Trade-off</th>
+                                    <th>Use Case</th>
+                                </tr>
+                                <tr>
+                                    <td><strong>MySQL</strong></td>
+                                    <td>CA (Consistency + Availability)</td>
+                                    <td>Not partition tolerant</td>
+                                    <td>Single datacenter applications</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>MongoDB</strong></td>
+                                    <td>CP (Consistency + Partition tolerance)</td>
+                                    <td>May become unavailable</td>
+                                    <td>Strong consistency requirements</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Cassandra</strong></td>
+                                    <td>AP (Availability + Partition tolerance)</td>
+                                    <td>Eventually consistent</td>
+                                    <td>High availability systems</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Redis</strong></td>
+                                    <td>CP (with clustering)</td>
+                                    <td>May lose availability</td>
+                                    <td>Caching with consistency</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div id="nosql" class="tab-content">
+                        <h4>🏗️ NoSQL Design Patterns</h4>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 20px 0;">
+                            <div style="background: #F0F8FF; padding: 20px; border-radius: 10px;">
+                                <strong>📄 EMBEDDING</strong><br>
+                                Store related data in single document<br><br>
+                                <strong>When to use:</strong> 1:few relationships, data read together
+                            </div>
+                            <div style="background: #F0FFF0; padding: 20px; border-radius: 10px;">
+                                <strong>🔗 REFERENCING</strong><br>
+                                Store references to other documents<br><br>
+                                <strong>When to use:</strong> 1:many relationships, large subdocuments
+                            </div>
+                            <div style="background: #FFF8DC; padding: 20px; border-radius: 10px;">
+                                <strong>🪣 BUCKETING</strong><br>
+                                Group related documents together<br><br>
+                                <strong>When to use:</strong> Time-series data, grouping by time periods
+                            </div>
+                            <div style="background: #FFE5E5; padding: 20px; border-radius: 10px;">
+                                <strong>🎭 POLYMORPHISM</strong><br>
+                                Different document structures in same collection<br><br>
+                                <strong>When to use:</strong> Similar but varied data types
+                            </div>
+                        </div>
+
+                        <div class="mongodb-block">// Embedding Pattern - Blog with Comments
+{
+    "_id": ObjectId("..."),
+    "title": "Introduction to MongoDB",
+    "content": "MongoDB is a NoSQL database...",
+    "author": "John Doe",
+    "publishDate": ISODate("2023-10-15"),
+    "comments": [
+        {
+            "author": "Jane Smith",
+            "text": "Great article!",
+            "date": ISODate("2023-10-16")
+        },
+        {
+            "author": "Bob Johnson",
+            "text": "Very helpful, thanks!",
+            "date": ISODate("2023-10-17")
+        }
+    ],
+    "tags": ["mongodb", "nosql", "database"]
+}
+
+// Referencing Pattern - User and Orders
+// Users collection
+{
+    "_id": ObjectId("user123"),
+    "name": "John Doe",
+    "email": "john@example.com"
+}
+
+// Orders collection
+{
+    "_id": ObjectId("order456"),
+    "userId": ObjectId("user123"),  // Reference to user
+    "items": [...],
+    "total": 99.99
+}
+
+// Bucketing Pattern - Time Series Data
+{
+    "_id": ObjectId("..."),
+    "sensor_id": "temp_01",
+    "date": ISODate("2023-10-15"),
+    "readings": [
+        {"time": "00:00", "value": 22.5},
+        {"time": "00:15", "value": 22.7},
+        {"time": "00:30", "value": 22.4},
+        // ... more readings for this hour
+    ]
+}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interview Questions -->
+            <div class="concept">
+                <div class="concept-header">🎯 Common Interview Questions</div>
+                <div class="concept-content">
+                    <div class="example">
+                        <h4>❓ SQL vs NoSQL Comparison Questions</h4>
+                        
+                        <div style="background: #F8F9FA; padding: 20px; border-radius: 10px; margin: 15px 0;">
+                            <strong>Q1: When would you choose SQL over NoSQL?</strong><br><br>
+                            <strong>Answer:</strong><br>
+                            • <strong>ACID requirements:</strong> Banking, financial transactions<br>
+                            • <strong>Complex queries:</strong> Reporting, analytics with JOINs<br>
+                            • <strong>Structured data:</strong> Well-defined schema requirements<br>
+                            • <strong>Mature ecosystem:</strong> Existing tools and expertise<br>
+                            • <strong>Strong consistency:</strong> Inventory management systems
+                        </div>
+
+                        <div style="background: #F8F9FA; padding: 20px; border-radius: 10px; margin: 15px 0;">
+                            <strong>Q2: Explain the difference between INNER JOIN and LEFT JOIN with an example.</strong><br><br>
+                            <div class="sql-block">-- Sample data
+Students: [John(1), Jane(2), Bob(3)]
+Enrollments: [John→CS101, Jane→MATH201]
+
+-- INNER JOIN: Only students who are enrolled
+SELECT s.name, e.course
+FROM students s
+INNER JOIN enrollments e ON s.id = e.student_id;
+-- Result: John→CS101, Jane→MATH201 (Bob excluded)
+
+-- LEFT JOIN: All students, with or without enrollments
+SELECT s.name, e.course
+FROM students s
+LEFT JOIN enrollments e ON s.id = e.student_id;
+-- Result: John→CS101, Jane→MATH201, Bob→NULL</div>
+                        </div>
+
+                        <div style="background: #F8F9FA; padding: 20px; border-radius: 10px; margin: 15px 0;">
+                            <strong>Q3: What is the N+1 query problem?</strong><br><br>
+                            <strong>Problem:</strong> Making N additional queries for N records<br><br>
+                            <div class="sql-block">-- BAD: N+1 Problem
+-- 1 query to get students
+SELECT * FROM students; -- Returns 100 students
+
+-- Then N queries (one for each student)
+SELECT * FROM courses WHERE student_id = 1;
+SELECT * FROM courses WHERE student_id = 2;
+-- ... 100 more queries!
+
+-- GOOD: Single query with JOIN
+SELECT s.*, c.course_name
+FROM students s
+LEFT JOIN student_courses sc ON s.id = sc.student_id
+LEFT JOIN courses c ON sc.course_id = c.id;</div>
+                        </div>
+
+                        <div style="background: #F8F9FA; padding: 20px; border-radius: 10px; margin: 15px 0;">
+                            <strong>Q4: How would you design a database for a social media platform?</strong><br><br>
+                            <strong>Approach:</strong><br>
+                            1. <strong>Identify entities:</strong> Users, Posts, Comments, Likes, Follows<br>
+                            2. <strong>Choose database:</strong> Hybrid approach (SQL + NoSQL)<br>
+                            3. <strong>User data:</strong> SQL for consistency (profiles, auth)<br>
+                            4. <strong>Posts/Feed:</strong> NoSQL for scalability (MongoDB/Cassandra)<br>
+                            5. <strong>Real-time features:</strong> Redis for caching, notifications<br>
+                            6. <strong>Analytics:</strong> Data warehouse (BigQuery, Snowflake)
+                        </div>
+
+                        <div style="background: #F8F9FA; padding: 20px; border-radius: 10px; margin: 15px 0;">
+                            <strong>Q5: Explain MongoDB aggregation pipeline with an example.</strong><br><br>
+                            <div class="mongodb-block">// Find top 3 majors by average GPA
+db.students.aggregate([
+    // Stage 1: Filter active students
+    {
+        "$match": {
+            "isActive": true,
+            "gpa": {"$exists": true}
+        }
+    },
+    // Stage 2: Group by major and calculate metrics
+    {
+        "$group": {
+            "_id": "$major",
+            "avgGPA": {"$avg": "$gpa"},
+            "count": {"$sum": 1},
+            "maxGPA": {"$max": "$gpa"},
+            "minGPA": {"$min": "$gpa"}
+        }
+    },
+    // Stage 3: Sort by average GPA (descending)
+    {
+        "$sort": {"avgGPA": -1}
+    },
+    // Stage 4: Limit to top 3 results
+    {
+        "$limit": 3
+    },
+    // Stage 5: Format output
+    {
+        "$project": {
+            "major": "$_id",
+            "averageGPA": {"$round": ["$avgGPA", 2]},
+            "studentCount": "$count",
+            "highestGPA": "$maxGPA",
+            "lowestGPA": "$minGPA",
+            "_id": 0
+        }
+    }
+]);</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
